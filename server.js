@@ -23,6 +23,9 @@ function validateNote(note) {
     if (!note.title || typeof note.title !== 'string') {
         return false;
     }
+    if (!note.text || typeof note.text !== 'string') {
+        return false;
+    }
     return true;
 }
 
@@ -34,12 +37,16 @@ app.post('/api/notes', (req, res) => {
     req.body.id = nanoid();
 
     if (!validateNote(req.body)) {
-        res.status(400).send('The note is not properly formatted');
+        res.status(400).send('The note must have a title and text');
     } else {
         const note = createNewNote(req.body, notes);
         res.json(note);
     }
 });
+
+app.delete('./api/notes/:id', (req, res) => {
+
+})
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, './public/index.html'));
