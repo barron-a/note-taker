@@ -7,7 +7,8 @@ const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static('public'));
-const { notes } = require('./db/db.json')
+const { notes } = require('./db/db.json');
+const { text } = require('express');
 
 function createNewNote(body, notesArray) {
     const note = body;
@@ -44,9 +45,18 @@ app.post('/api/notes', (req, res) => {
     }
 });
 
-app.delete('./api/notes/:id', (req, res) => {
+app.delete('/api/notes/:id', (req, res) => {
+    var id = req.params.id;
 
-})
+    var noteToDelete = notes.findIndex(notes => notes.id === id);
+    notes.splice(noteToDelete, 1)
+
+    fs.writeFileSync(
+        path.join(__dirname, './db/db.json'),
+        JSON.stringify({ notes }, null, 2)
+    );
+    res.end();
+});
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, './public/index.html'));
