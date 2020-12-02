@@ -20,7 +20,7 @@ function createNewNote(body, notesArray) {
     return note;
 };
 
-function validateNote(note) {
+function validateTitle(note) {
     if (!note.title || typeof note.title !== 'string') {
         return false;
     }
@@ -28,6 +28,16 @@ function validateNote(note) {
         return false;
     }
     return true;
+};
+
+function validateNoteText(note) {
+    if (!note.text || typeof note.text !== 'string') {
+        return false;
+    }
+    if (!note.text || typeof note.text !== 'string') {
+        return false;
+    }
+    return true
 }
 
 app.get('/api/notes', (req, res) => {
@@ -37,7 +47,7 @@ app.get('/api/notes', (req, res) => {
 app.post('/api/notes', (req, res) => {
     req.body.id = nanoid();
 
-    if (!validateNote(req.body)) {
+    if (!validateTitle(req.body) && validateNoteText(req.body))  {
         res.status(400).send('The note must have a title and text');
     } else {
         const note = createNewNote(req.body, notes);
